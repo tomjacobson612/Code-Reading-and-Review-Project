@@ -4,33 +4,30 @@ import requests
 # Window
 width = 1100
 height = 1200
-window = pygame.display.set_mode((width, height))
-background_color = (251, 247, 245)
+displayWindow = pygame.display.set_mode((width, height))
+backgroundColor = (251, 247, 245)
 pygame.display.set_caption("Sudoku Solver")
 
-
 class Button():
-    def __init__(self, x, y, image):
-        self.image = image
-        self.rectangle = self.image.get_rect()
+    def __init__(self, x, y, icon):
+        self.icon = icon
+        self.rectangle = self.icon.get_rect()
         self.rectangle.topleft = (x, y)
-        self.clicked = False
+        self.pressedByUser = False
 
     def draw(self):
         action = False
-
-        #get mouse position
-        pos = pygame.mouse.get_pos()
+        mousePosition = pygame.mouse.get_pos()
 
         #check mouseover and clicked conditions
-        if self.rectangle.collidepoint(pos):
-            if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
-                self.clicked = True
+        if self.rectangle.collidepoint(mousePosition):
+            if pygame.mouse.get_pressed()[0] == 1 and self.pressedByUser == False:
+                self.pressedByUser = True
                 action = True
             if pygame.mouse.get_pressed()[0] == 0:
-                self.clicked = False
+                self.pressedByUser = False
 
-        window.blit(self.image, (self.rectangle.x, self.rectangle.y))
+        displayWindow.blit(self.icon, (self.rectangle.x, self.rectangle.y))
         return action
 
 # Buttons
@@ -77,15 +74,15 @@ class Game:
 
     def draw_grid(self):
         pygame.init()
-        window.fill(background_color)
+        displayWindow.fill(backgroundColor)
 
         for i in range(0, 10):
             if i % 3 == 0:
-                pygame.draw.line(window, (0, 0, 0), (100 + 100 * i, 100), (100 + 100 * i, 1000), 4)
-                pygame.draw.line(window, (0, 0, 0), (100, 100 + 100 * i), (1000, 100 + 100 * i), 4)
+                pygame.draw.line(displayWindow, (0, 0, 0), (100 + 100 * i, 100), (100 + 100 * i, 1000), 4)
+                pygame.draw.line(displayWindow, (0, 0, 0), (100, 100 + 100 * i), (1000, 100 + 100 * i), 4)
 
-            pygame.draw.line(window, (0, 0, 0), (100 + 100 * i, 100), (100 + 100 * i, 1000), 1)
-            pygame.draw.line(window, (0, 0, 0), (100, 100 + 100 * i), (1000, 100 + 100 * i), 1)
+            pygame.draw.line(displayWindow, (0, 0, 0), (100 + 100 * i, 100), (100 + 100 * i, 1000), 1)
+            pygame.draw.line(displayWindow, (0, 0, 0), (100, 100 + 100 * i), (1000, 100 + 100 * i), 1)
 
         pygame.display.update()
 
@@ -95,7 +92,7 @@ class Game:
             for j in range(len(self.board[0])):
                 if 0 < self.board[i][j] < 10:
                     value = font.render(str(self.board[i][j]), True, self.og_grid_color)
-                    window.blit(value, ((j + 1) * 100 + 30, (i + 1) * 100 + 15))
+                    displayWindow.blit(value, ((j + 1) * 100 + 30, (i + 1) * 100 + 15))
         pygame.display.update()
 
     def check_board(self):
@@ -164,7 +161,7 @@ class Game:
             for j in range(len(self.board[0])):
                 if 0 < self.board[i][j] < 10 and self.board[i][j] != self.board_unchanging[i][j]:
                     value = font.render(str(self.board[i][j]), True, self.solved_color)
-                    window.blit(value, ((j + 1) * 100 + 30, (i + 1) * 100 + 15))
+                    displayWindow.blit(value, ((j + 1) * 100 + 30, (i + 1) * 100 + 15))
         pygame.display.update()
 
 def main():

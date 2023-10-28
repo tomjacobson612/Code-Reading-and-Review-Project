@@ -1,0 +1,2 @@
+1. Make Window into class
+2. Seperate drawing functionality from draw() and the clicked logic into a different function. 
