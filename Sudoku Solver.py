@@ -31,10 +31,10 @@ class Button():
         return action
 
 # Buttons
-solve_img = pygame.image.load('solve.jpg').convert_alpha()
+solve_img = pygame.image.load('images/solve.jpg').convert_alpha()
 solve_button = Button(100, 1025, solve_img)
 
-restart_img = pygame.image.load('restart.png').convert_alpha()
+restart_img = pygame.image.load('images/restart.png').convert_alpha()
 restart_button = Button(600, 1040, restart_img)
 
 class Game:
