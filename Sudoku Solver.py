@@ -1,12 +1,13 @@
 import pygame
-import requests
 
-# Window
-width = 1100
-height = 1200
-displayWindow = pygame.display.set_mode((width, height))
-backgroundColor = (251, 247, 245)
-pygame.display.set_caption("Sudoku Solver")
+class Window():
+    def __init__(self, height, width, backgroundColor):
+        self.height = height
+        self.width = width
+        self.backgroundColor = backgroundColor
+        self.screen = pygame.display.set_mode((width, height))
+
+displayWindow = Window(1200, 1100, (251, 247, 245))
 
 class Button():
     def __init__(self, x, y, icon):
@@ -16,7 +17,7 @@ class Button():
         self.pressedByUser = False
 
     def draw(self):
-        displayWindow.blit(self.icon, (self.rectangle.x, self.rectangle.y))
+        displayWindow.screen.blit(self.icon, (self.rectangle.x, self.rectangle.y))
     
     def buttonPress(self):
         action = False
@@ -37,7 +38,7 @@ class Game:
         self.boardSolved = False
         self.buttons = []
 
-        self.cellColor = (0, 0, 0)
+        self.defaultColor = (0, 0, 0)
         self.solutionColor = (136, 8, 8)
 
         self.board = self.generate_board()
@@ -61,11 +62,12 @@ class Game:
         [0, 0, 0, 0, 8, 0, 0, 7, 9] ]
         return default_grid
     
-    def drawBoard(self, gridColor, gridOuterWidth, gridInnerWidth):
+    def drawBoard(self, gridColor, backgroundColor, gridOuterWidth, gridInnerWidth):
 
+        displayWindow.screen.fill(backgroundColor)
         self.drawGrid(gridColor, gridOuterWidth, gridInnerWidth)
         self.initializeBoard()
-
+        
         if not self.buttons:
             solve_img = pygame.image.load('images/solve.jpg').convert_alpha()
             self.initializeButton(100, 1025, solve_img)
@@ -75,17 +77,16 @@ class Game:
         for button in self.buttons:
             button.draw()
 
-    def drawGrid(self, color, borderWidth, innerLineWidth):
+    def drawGrid(self, gridColor, borderWidth, innerLineWidth):
         pygame.init()
-        displayWindow.fill(backgroundColor)
 
         for i in range(0, 10):
             if i % 3 == 0:
-                pygame.draw.line(displayWindow, color, (100 + 100 * i, 100), (100 + 100 * i, 1000), borderWidth)
-                pygame.draw.line(displayWindow, color, (100, 100 + 100 * i), (1000, 100 + 100 * i), borderWidth)
+                pygame.draw.line(displayWindow.screen, gridColor, (100 + 100 * i, 100), (100 + 100 * i, 1000), borderWidth)
+                pygame.draw.line(displayWindow.screen, gridColor, (100, 100 + 100 * i), (1000, 100 + 100 * i), borderWidth)
 
-            pygame.draw.line(displayWindow, color, (100 + 100 * i, 100), (100 + 100 * i, 1000), innerLineWidth)
-            pygame.draw.line(displayWindow, color, (100, 100 + 100 * i), (1000, 100 + 100 * i), innerLineWidth)
+            pygame.draw.line(displayWindow.screen, gridColor, (100 + 100 * i, 100), (100 + 100 * i, 1000), innerLineWidth)
+            pygame.draw.line(displayWindow.screen, gridColor, (100, 100 + 100 * i), (1000, 100 + 100 * i), innerLineWidth)
 
         pygame.display.update()
 
@@ -94,8 +95,8 @@ class Game:
         for i in range(len(self.board[0])):
             for j in range(len(self.board[0])):
                 if 0 < self.board[i][j] < 10:
-                    cellValue = font.render(str(self.board[i][j]), True, self.cellColor)
-                    displayWindow.blit(cellValue, ((j + 1) * 100 + 30, (i + 1) * 100 + 15))
+                    cellValue = font.render(str(self.board[i][j]), True, self.defaultColor)
+                    displayWindow.screen.blit(cellValue, ((j + 1) * 100 + 30, (i + 1) * 100 + 15))
         pygame.display.update()
 
     def initializeButton(self, x, y, icon):
@@ -175,15 +176,16 @@ class Game:
             for column in range(len(self.board[0])):
                 if 0 < self.board[row][column] < 10 and self.board[row][column] != self.unchangingBoard[row][column]:
                     cellValue = font.render(str(self.board[row][column]), True, self.solutionColor)
-                    displayWindow.blit(cellValue, ((column + 1) * 100 + 30, (row + 1) * 100 + 15))
+                    displayWindow.screen.blit(cellValue, ((column + 1) * 100 + 30, (row + 1) * 100 + 15))
         pygame.display.update()
 
 def main():
     app = Game()
     gridColor = (0, 0, 0)
+    backgroundColor = (255, 255, 255)
     gridOuterWidth = 4
     gridInnerWidth = 1
-    app.drawBoard(gridColor, gridOuterWidth, gridInnerWidth)
+    app.drawBoard(gridColor, backgroundColor, gridOuterWidth, gridInnerWidth)
 
     while True:
         if app.buttons[0].buttonPress() and not app.boardSolved:
@@ -191,7 +193,7 @@ def main():
             app.populateSolution()
         if app.buttons[1].buttonPress():
             app = Game()
-            app.drawBoard(gridColor, gridOuterWidth, gridInnerWidth)
+            app.drawBoard(gridColor, backgroundColor, gridOuterWidth, gridInnerWidth)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
