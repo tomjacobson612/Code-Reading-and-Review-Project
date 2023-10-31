@@ -89,8 +89,13 @@ class Game:
                     displayWindow.blit(cellValue, ((j + 1) * 100 + 30, (i + 1) * 100 + 15))
         pygame.display.update()
 
-    def checkBoard(self):
-        # check rows:
+    def validateBoard(self):
+        if not self.validateRow() or not self.validateColumn() or not self.validate3x3():
+            return False
+        else:
+            return True
+
+    def validateRow(self):
         for row in range(len(self.board)):
             checked = []
             for column in range(len(self.board[0])):
@@ -98,8 +103,9 @@ class Game:
                     checked.append(self.board[row][column])
                 elif self.board[row][column] != 0 and self.board[row][column] in checked:
                     return False
-
-        # check columns:
+        return True
+    
+    def validateColumn(self):
         for row in range(len(self.board[0])):
             checked = []
             for column in range(len(self.board)):
@@ -107,24 +113,24 @@ class Game:
                     checked.append(self.board[column][row])
                 elif self.board[column][row] != 0 and self.board[column][row] in checked:
                     return False
-
-        # check each 3x3
-        row = 0
-        column = 0
-        while row < 9 and column < 9:
+        return True
+    
+    def validate3x3(self):
+        startRow = 0
+        startColumn = 0
+        while startRow < 9 and startColumn < 9:
             checked = []
-            for row in range(row, row + 3):
-                for column in range(column, column + 3):
+            for row in range(startRow, startRow + 3):
+                for column in range(startColumn, startColumn + 3):
                     if self.board[row][column] not in checked and self.board[row][column] != 0:
                         checked.append(self.board[row][column])
                     elif self.board[row][column] != 0 and self.board[row][column] in checked:
                         return False
-            if column < 9:
-                column += 3
-                if column == 9:
-                    column = 0
-                    row += 3
-
+            if startColumn < 9:
+                startColumn += 3
+                if startColumn == 9:
+                    startColumn = 0
+                    startRow += 3
         return True
 
     def nextEmptyCell(self):
@@ -142,7 +148,7 @@ class Game:
         else:
             for i in range(1, 10):
                 self.board[emptyCell[0]][emptyCell[1]] = i
-                if self.checkBoard():
+                if self.validateBoard():
                     if self.solveBoard():
                         self.boardSolved = True
                         return self.board
