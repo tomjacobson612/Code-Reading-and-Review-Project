@@ -16,6 +16,9 @@ class Button():
         self.pressedByUser = False
 
     def draw(self):
+        displayWindow.blit(self.icon, (self.rectangle.x, self.rectangle.y))
+    
+    def buttonPress(self):
         action = False
         mousePosition = pygame.mouse.get_pos()
 
@@ -26,21 +29,13 @@ class Button():
                 action = True
             if pygame.mouse.get_pressed()[0] == 0:
                 self.pressedByUser = False
-
-        displayWindow.blit(self.icon, (self.rectangle.x, self.rectangle.y))
         return action
-
-# Buttons
-solve_img = pygame.image.load('images/solve.jpg').convert_alpha()
-solve_button = Button(100, 1025, solve_img)
-
-restart_img = pygame.image.load('images/restart.png').convert_alpha()
-restart_button = Button(600, 1040, restart_img)
 
 class Game:
     def __init__(self):
         self.gameRunning = True
         self.boardSolved = False
+        self.buttons = []
 
         self.cellColor = (0, 0, 0)
         self.solutionColor = (136, 8, 8)
@@ -65,6 +60,20 @@ class Game:
         [0, 0, 0, 4, 1, 9, 0, 0, 5],
         [0, 0, 0, 0, 8, 0, 0, 7, 9] ]
         return default_grid
+    
+    def drawBoard(self, color, borderWidth, innerLineWidth):
+
+        self.drawGrid(color, borderWidth, innerLineWidth)
+        self.initializeBoard()
+
+        if not self.buttons:
+            solve_img = pygame.image.load('images/solve.jpg').convert_alpha()
+            self.initializeButton(100, 1025, solve_img)
+            restart_img = pygame.image.load('images/restart.png').convert_alpha()
+            self.initializeButton(600, 1040, restart_img)
+
+        for button in self.buttons:
+            button.draw()
 
     def drawGrid(self, color, borderWidth, innerLineWidth):
         pygame.init()
@@ -88,6 +97,11 @@ class Game:
                     cellValue = font.render(str(self.board[i][j]), True, self.cellColor)
                     displayWindow.blit(cellValue, ((j + 1) * 100 + 30, (i + 1) * 100 + 15))
         pygame.display.update()
+
+    def initializeButton(self, x, y, icon):
+        newButton = Button(x, y, icon)
+        self.buttons.append(newButton)
+
 
     def validateBoard(self):
         if not self.validateRow() or not self.validateColumn() or not self.validate3x3():
@@ -166,15 +180,13 @@ class Game:
 
 def main():
     app = Game()
-    app.drawGrid((0, 0, 0), 4, 1)
-    app.initializeBoard()
+    app.drawBoard((0, 0, 0), 4, 1)
 
     while True:
-        if restart_button.draw():
+        if app.buttons[1].buttonPress():
             app = Game()
-            app.drawGrid((0, 0, 0), 4, 1)
-            app.initializeBoard()
-        if solve_button.draw() and not app.boardSolved:
+            app.drawBoard((0, 0, 0), 4, 1)
+        if app.buttons[0].buttonPress() and not app.boardSolved:
             app.solveBoard()
             app.populateSolution()
         for event in pygame.event.get():
