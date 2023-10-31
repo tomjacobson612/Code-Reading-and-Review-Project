@@ -61,9 +61,9 @@ class Game:
         [0, 0, 0, 0, 8, 0, 0, 7, 9] ]
         return default_grid
     
-    def drawBoard(self, color, borderWidth, innerLineWidth):
+    def drawBoard(self, gridColor, gridOuterWidth, gridInnerWidth):
 
-        self.drawGrid(color, borderWidth, innerLineWidth)
+        self.drawGrid(gridColor, gridOuterWidth, gridInnerWidth)
         self.initializeBoard()
 
         if not self.buttons:
@@ -180,20 +180,22 @@ class Game:
 
 def main():
     app = Game()
-    app.drawBoard((0, 0, 0), 4, 1)
+    gridColor = (0, 0, 0)
+    gridOuterWidth = 4
+    gridInnerWidth = 1
+    app.drawBoard(gridColor, gridOuterWidth, gridInnerWidth)
 
     while True:
-        if app.buttons[1].buttonPress():
-            app = Game()
-            app.drawBoard((0, 0, 0), 4, 1)
         if app.buttons[0].buttonPress() and not app.boardSolved:
             app.solveBoard()
             app.populateSolution()
+        if app.buttons[1].buttonPress():
+            app = Game()
+            app.drawBoard((0, 0, 0), 4, 1)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
-
         pygame.display.update()
 
 if __name__ == "__main__" :
