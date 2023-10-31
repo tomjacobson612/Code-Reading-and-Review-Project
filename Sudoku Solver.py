@@ -191,7 +191,7 @@ def main():
             app.populateSolution()
         if app.buttons[1].buttonPress():
             app = Game()
-            app.drawBoard((0, 0, 0), 4, 1)
+            app.drawBoard(gridColor, gridOuterWidth, gridInnerWidth)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
