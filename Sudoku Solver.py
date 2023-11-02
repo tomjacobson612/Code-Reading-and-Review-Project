@@ -35,13 +35,16 @@ class Button():
         return action
 
 class Game:
-    def __init__(self):
+    def __init__(self, gridColor, solutionColor, backgroundColor, gridOuterWidth, gridInnerWidth):
         self.gameRunning = True
         self.boardSolved = False
         self.buttons = []
 
-        self.defaultColor = (0, 0, 0)
-        self.solutionColor = (136, 8, 8)
+        self.gridColor = gridColor
+        self.solutionColor = solutionColor
+        self.backgroundColor = backgroundColor
+        self.gridOuterWidth = gridOuterWidth
+        self.gridInnerWidth = gridInnerWidth
 
         self.board = self.generate_board()
         self.unchangingBoard = self.generate_board()
@@ -64,10 +67,10 @@ class Game:
         [0, 0, 0, 0, 8, 0, 0, 7, 9] ]
         return default_grid
     
-    def drawBoard(self, gridColor, backgroundColor, gridOuterWidth, gridInnerWidth):
+    def drawBoard(self):
 
-        displayWindow.screen.fill(backgroundColor)
-        self.drawGrid(gridColor, gridOuterWidth, gridInnerWidth)
+        displayWindow.screen.fill(self.backgroundColor)
+        self.drawGrid(self.gridColor, self.gridOuterWidth, self.gridInnerWidth)
         self.initializeBoard()
         
         if not self.buttons:
@@ -97,7 +100,7 @@ class Game:
         for i in range(len(self.board[0])):
             for j in range(len(self.board[0])):
                 if 0 < self.board[i][j] < 10:
-                    cellValue = font.render(str(self.board[i][j]), True, self.defaultColor)
+                    cellValue = font.render(str(self.board[i][j]), True, self.gridColor)
                     displayWindow.screen.blit(cellValue, ((j + 1) * 100 + 30, (i + 1) * 100 + 15))
         pygame.display.update()
 
@@ -182,20 +185,16 @@ class Game:
         pygame.display.update()
 
 def main():
-    app = Game()
-    gridColor = (0, 0, 0)
-    backgroundColor = (255, 255, 255)
-    gridOuterWidth = 4
-    gridInnerWidth = 1
-    app.drawBoard(gridColor, backgroundColor, gridOuterWidth, gridInnerWidth)
+    app = Game(gridColor=(0, 0, 0), solutionColor=(136, 8, 8), backgroundColor=(255, 255, 255), gridOuterWidth=4, gridInnerWidth=1)
+    app.drawBoard()
 
     while True:
         if app.buttons[0].buttonPress() and not app.boardSolved:
             app.solveBoard()
             app.populateSolution()
         if app.buttons[1].buttonPress():
-            app = Game()
-            app.drawBoard(gridColor, backgroundColor, gridOuterWidth, gridInnerWidth)
+            app = Game(gridColor=(0, 0, 0), solutionColor=(136, 8, 8), backgroundColor=(255, 255, 255), gridOuterWidth=4, gridInnerWidth=1)
+            app.drawBoard()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
