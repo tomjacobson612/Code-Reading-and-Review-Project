@@ -11,7 +11,7 @@ class Window():
 
 displayWindow = Window(1200, 1100, (251, 247, 245), 'Sudoku Solver')
 
-class Button():
+class ButtonRectangular():
     def __init__(self, x, y, icon):
         self.icon = icon
         self.rectangle = self.icon.get_rect()
@@ -25,7 +25,6 @@ class Button():
         action = False
         mousePosition = pygame.mouse.get_pos()
 
-        #check mouseover and clicked conditions
         if self.rectangle.collidepoint(mousePosition):
             if pygame.mouse.get_pressed()[0] == 1 and self.pressedByUser == False:
                 self.pressedByUser = True
@@ -105,7 +104,7 @@ class Game:
         pygame.display.update()
 
     def initializeButton(self, x, y, icon):
-        newButton = Button(x, y, icon)
+        newButton = ButtonRectangular(x, y, icon)
         self.buttons.append(newButton)
 
 
