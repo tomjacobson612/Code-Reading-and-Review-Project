@@ -1,5 +1,5 @@
 import pygame
-from Window import WINDOW
+from SudokuSolver import WINDOW
 
 class ButtonRectangular():
     def __init__(self, x, y, icon):

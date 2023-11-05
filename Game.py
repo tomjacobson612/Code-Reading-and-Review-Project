@@ -1,5 +1,5 @@
 import pygame, Button
-from Window import WINDOW
+from SudokuSolver import WINDOW
 
 class Game:
     def __init__(self, gridColor, solutionColor, backgroundColor, gridOuterWidth, gridInnerWidth):

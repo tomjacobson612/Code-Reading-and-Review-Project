@@ -8,5 +8,3 @@ class Window():
         self.caption = caption
         self.screen = pygame.display.set_mode((width, height))
         pygame.display.set_caption(self.caption)
-
-WINDOW = Window(1200, 1100, (251, 247, 245), 'Sudoku Solver')

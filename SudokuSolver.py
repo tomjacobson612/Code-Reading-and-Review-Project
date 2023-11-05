@@ -1,4 +1,6 @@
-import pygame, Game
+import pygame, Game, Window
+
+WINDOW = Window.Window(1200, 1100, (251, 247, 245), 'Sudoku Solver')
 
 def main():
     app = Game.Game(gridColor=(0, 0, 0), solutionColor=(136, 8, 8), backgroundColor=(255, 255, 255), gridOuterWidth=4, gridInnerWidth=1)
