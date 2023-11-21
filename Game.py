@@ -2,7 +2,7 @@ import pygame, Button
 from SudokuSolver import WINDOW
 
 class Game:
-    def __init__(self, gridColor, solutionColor, backgroundColor, gridOuterWidth, gridInnerWidth):
+    def __init__(self, gridColor=(0, 0, 0), solutionColor=(136, 8, 8), backgroundColor=(255, 255, 255), gridOuterWidth=4, gridInnerWidth=1):
         self.gameRunning = True
         self.boardSolved = False
         self.buttons = []
