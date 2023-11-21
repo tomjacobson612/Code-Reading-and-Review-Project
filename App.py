@@ -7,7 +7,7 @@ def main():
     app.drawBoard()
 
     while True:
-        if app.buttons[0].buttonPress() and not app.boardSolved:
+        if app.buttons[0].buttonPress():
             app.populateSolution()
         if app.buttons[1].buttonPress():
             app = Game.Game()
