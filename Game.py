@@ -4,7 +4,6 @@ from App import WINDOW
 class Game:
     def __init__(self, gridColor=(0, 0, 0), solutionColor=(136, 8, 8), backgroundColor=(255, 255, 255), gridOuterWidth=4, gridInnerWidth=1):
         self.gameRunning = True
-        self.boardSolved = False
         self.buttons = []
 
         self.gridColor = gridColor
@@ -77,11 +76,15 @@ class Game:
         self.buttons.append(newButton)
 
     def populateSolution(self):
-        self.board = self.solver.solveBoard()
-        font = pygame.font.SysFont('Arial', 70)
-        for row in range(len(self.board[0])):
-            for column in range(len(self.board[0])):
-                if 0 < self.board[row][column] < 10 and self.board[row][column] != self.unchangingBoard[row][column]:
-                    cellValue = font.render(str(self.board[row][column]), True, self.solutionColor)
-                    WINDOW.screen.blit(cellValue, ((column + 1) * 100 + 30, (row + 1) * 100 + 15))
-        pygame.display.update()
+        if not self.solver.boardSolved:
+            self.board = self.solver.solveBoard()
+        if self.board == False:
+            print("Unsolvable Board")
+        else:
+            font = pygame.font.SysFont('Arial', 70)
+            for row in range(len(self.board[0])):
+                for column in range(len(self.board[0])):
+                    if 0 < self.board[row][column] < 10 and self.board[row][column] != self.unchangingBoard[row][column]:
+                        cellValue = font.render(str(self.board[row][column]), True, self.solutionColor)
+                        WINDOW.screen.blit(cellValue, ((column + 1) * 100 + 30, (row + 1) * 100 + 15))
+            pygame.display.update()

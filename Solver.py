@@ -1,6 +1,7 @@
 class sudokuSolver:
     def __init__(self, board):
         self.boardToSolve = board
+        self.boardSolved = False
 
     def validateBoard(self):
         if not self.validateRow() or not self.validateColumn() or not self.validate3x3():
@@ -63,7 +64,7 @@ class sudokuSolver:
                 self.boardToSolve[emptyCell[0]][emptyCell[1]] = i
                 if self.validateBoard():
                     if self.solveBoard():
-                        self.boardToSolveSolved = True
+                        self.boardSolved = True
                         return self.boardToSolve
                 self.boardToSolve[emptyCell[0]][emptyCell[1]] = 0
         return False
