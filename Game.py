@@ -1,5 +1,5 @@
-import pygame, Button
-from SudokuSolver import WINDOW
+import pygame, Button, Solver
+from App import WINDOW
 
 class Game:
     def __init__(self, gridColor=(0, 0, 0), solutionColor=(136, 8, 8), backgroundColor=(255, 255, 255), gridOuterWidth=4, gridInnerWidth=1):
@@ -15,6 +15,7 @@ class Game:
 
         self.board = self.generate_board()
         self.unchangingBoard = self.generate_board()
+        self.solver = Solver.sudokuSolver(self.board)
 
     def on_init(self):
         pygame.init()
@@ -75,74 +76,8 @@ class Game:
         newButton = Button.ButtonRectangular(x, y, icon)
         self.buttons.append(newButton)
 
-
-    def validateBoard(self):
-        if not self.validateRow() or not self.validateColumn() or not self.validate3x3():
-            return False
-        else:
-            return True
-
-    def validateRow(self):
-        for row in range(len(self.board)):
-            checked = []
-            for column in range(len(self.board[0])):
-                if self.board[row][column] not in checked and self.board[row][column] != 0:
-                    checked.append(self.board[row][column])
-                elif self.board[row][column] != 0 and self.board[row][column] in checked:
-                    return False
-        return True
-    
-    def validateColumn(self):
-        for row in range(len(self.board[0])):
-            checked = []
-            for column in range(len(self.board)):
-                if self.board[column][row] not in checked and self.board[column][row] != 0:
-                    checked.append(self.board[column][row])
-                elif self.board[column][row] != 0 and self.board[column][row] in checked:
-                    return False
-        return True
-    
-    def validate3x3(self):
-        startRow = 0
-        startColumn = 0
-        while startRow < 9 and startColumn < 9:
-            checked = []
-            for row in range(startRow, startRow + 3):
-                for column in range(startColumn, startColumn + 3):
-                    if self.board[row][column] not in checked and self.board[row][column] != 0:
-                        checked.append(self.board[row][column])
-                    elif self.board[row][column] != 0 and self.board[row][column] in checked:
-                        return False
-            if startColumn < 9:
-                startColumn += 3
-                if startColumn == 9:
-                    startColumn = 0
-                    startRow += 3
-        return True
-
-    def nextEmptyCell(self):
-        for row in range(len(self.board)):
-            for column in range(len(self.board[0])):
-                if self.board[row][column] == 0:
-                    return (row, column)
-        return None
-
-    def solveBoard(self):
-        emptyCell = self.nextEmptyCell()
-
-        if not emptyCell:
-            return True
-        else:
-            for i in range(1, 10):
-                self.board[emptyCell[0]][emptyCell[1]] = i
-                if self.validateBoard():
-                    if self.solveBoard():
-                        self.boardSolved = True
-                        return self.board
-                self.board[emptyCell[0]][emptyCell[1]] = 0
-        return False
-
     def populateSolution(self):
+        self.board = self.solver.solveBoard()
         font = pygame.font.SysFont('Arial', 70)
         for row in range(len(self.board[0])):
             for column in range(len(self.board[0])):
